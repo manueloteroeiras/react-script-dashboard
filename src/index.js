@@ -9,7 +9,8 @@ import {
   Login,
   Dashboard,
   Slides,
-  Users
+  Users,
+  Profile
 } from './containers'
 
 import App from './App';
@@ -22,6 +23,7 @@ ReactDOM.render(
           <IndexRoute component={ Dashboard } />
           <Route path="/slides" component={ Slides } />
           <Route path="/users" component={ Users } />
+          <Route path="/profile" component={ Profile } />
         </Route>
         <Route path="/login" component={ Login } />
       </Router>

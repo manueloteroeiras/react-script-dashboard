@@ -30,7 +30,7 @@ class Navbar extends Component {
         <div style={ styles.userProfile }>
             <img src={ user } alt="user_profile" style={ styles.userImg } />
             <span style={ styles.textWhite } >{ this.props.username }</span>
-            <a style={{ ...styles.item, ...styles.btn }} >Profile</a>
+            <a style={{ ...styles.item, ...styles.btn }} ><Link to="/profile" >Profile</Link></a>
         </div>
         <ul style={ styles.list }>
           { this.props.items.map((item, key) => this.renderItem(item, key)) }
