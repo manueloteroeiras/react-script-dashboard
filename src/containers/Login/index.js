@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import firebase from '../../utils/firebase';
 
+import FontAwesome from 'react-fontawesome';
+
 import { getLogin, setLogin } from '../../actions';
 
 import styles from './styles';
@@ -13,7 +15,8 @@ class Login extends Component {
         super(props)
         this.state = {
             username: '',
-            pass: ''
+            pass: '',
+            sending : false
         }
     }
 
@@ -29,6 +32,7 @@ class Login extends Component {
     }
 
     login(){
+        this.setState({ sending:  true });
         let { username, pass } = this.state;
         firebase.auth().signInWithEmailAndPassword(username, pass)
         .then((resp) =>{
@@ -37,6 +41,22 @@ class Login extends Component {
         .catch(function(error) {
             console.log(error)
         });
+    }
+
+    renderButton(){
+        if(this.state.sending) return null;
+        return(
+            <button 
+                onClick={ () => this.login() } 
+                style={ styles.btn } >
+                Login
+            </button>
+        )
+    }
+
+    renderSpinner(){
+        if(!this.state.sending) return null;
+        return <FontAwesome name="spinner" size="2x" style={{ marginTop: 25 }} spin />
     }
 
     render(){
@@ -58,11 +78,9 @@ class Login extends Component {
                     onChange={ (e) => this.setState({ pass : e.target.value }) } 
                 />
 
-                <button 
-                    onClick={ () => this.login() } 
-                    style={ styles.btn } >
-                    Login
-                </button>
+                { this.renderButton() }
+
+                { this.renderSpinner() }
 
             </div>
         )
