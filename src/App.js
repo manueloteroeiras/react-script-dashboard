@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
 
-import { Navbar } from './components'
+import { Navbar } from './components';
+
+import { connect } from 'react-redux';
+
+import firebase from 'firebase';
+
+import { setLogin } from './actions'
+
+import css from './index.css'
 
 class App extends Component {
   constructor(props){
@@ -15,14 +21,41 @@ class App extends Component {
     ]
   }
 
+  checkAuth(props) {
+        firebase.auth().onAuthStateChanged(function(user) {
+        if (!user) window.location.replace('/login');
+        if(user) {
+          props.dispatch(setLogin(user));
+        }
+        });
+    }
+
+  logout(){
+    firebase.auth().signOut().then(function() {
+      window.location.replace('/login')
+    }, function(error) {
+      // An error happened.
+    });
+  }
+
   render() {
+    this.checkAuth(this.props);
     return (
       <div>
-        <Navbar items={ this.menuItems } />
+        <Navbar username={ this.props.user.email } logout={ ()=> this.logout() } items={ this.menuItems } />
         { this.props.children }
       </div>
     );
   }
 }
 
-export default App;
+
+function mapStateToProps(state) {
+  return {
+    user : state.user,
+    logged: state.logged
+  };
+}
+
+export default connect(mapStateToProps) (App);
+

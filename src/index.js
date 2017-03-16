@@ -1,7 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { Router, Route, browserHistory, IndexRoute, IndexRedirect } from  'react-router';
 
-import { BrowserRouter, Router, Route, browserHistory, IndexRoute } from  'react-router';
+import store from './stores';
 
 import {
   Login,
@@ -11,16 +13,18 @@ import {
 } from './containers'
 
 import App from './App';
-import './index.css';
 
-ReactDOM.render((
-  <Router history={ browserHistory }>
-    <Route exact path="/" component={ App }>
-      <IndexRoute component={ Dashboard } />
-      <Route path="/slides" component={ Slides } />
-      <Route path="/users" component={ Users } />
-    </Route>
-    <Route path="/login" component={ Login } />
-  </Router>),
+
+ReactDOM.render(
+  <Provider store={ store }>
+      <Router history={ browserHistory }>
+        <Route exact path="/" component={ App }>
+          <IndexRoute component={ Dashboard } />
+          <Route path="/slides" component={ Slides } />
+          <Route path="/users" component={ Users } />
+        </Route>
+        <Route path="/login" component={ Login } />
+      </Router>
+  </Provider>,
   document.getElementById('root')
 );

@@ -1,8 +1,10 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+
+import { connect } from 'react-redux';
 
 import styles from './styles';
 
-export default class Dashboard extends Component {
+class Dashboard extends Component {
     constructor(props){
         super(props)
         this.state = {
@@ -10,6 +12,7 @@ export default class Dashboard extends Component {
         }
     }
     render(){
+        console.log(this.props)
         return(
             <div style={ styles.container }>
 
@@ -19,3 +22,12 @@ export default class Dashboard extends Component {
         )
     }
 }
+
+function mapStateToProps(state) {
+  return {
+    user : state.user,
+    logged: state.logged
+  };
+}
+
+export default connect(mapStateToProps) (Dashboard);
