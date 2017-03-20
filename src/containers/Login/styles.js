@@ -17,7 +17,8 @@ const styles = {
         margin: '10px 0',
         width: 300,
         borderRadius: '10px',
-        paddingLeft: '10px'
+        paddingLeft: '10px',
+        color: '#fff'        
     },
 
     btn: {

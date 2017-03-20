@@ -65,7 +65,7 @@ class Login extends Component {
 
                 <input 
                     value={ this.state.username } 
-                    style={ styles.input } 
+                    style={styles.input} 
                     type="email"
                     placeholder='Username'
                     onChange={ (e) => this.setState({  username : e.target.value }) } 
