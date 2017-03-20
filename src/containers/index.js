@@ -3,11 +3,13 @@ import Dashboard from './Dashboard';
 import Slides from './Slides';
 import Users from './Users';
 import Profile from './Profile';
+import SlideEdit from './SlideEdit';
 
 export {
     Login,
     Dashboard,
     Slides,
     Users,
-    Profile
+    Profile,
+    SlideEdit
 }

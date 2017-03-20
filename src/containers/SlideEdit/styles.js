@@ -4,7 +4,6 @@ const styles = {
         backgroundColor: '#cfd8dc',
         display: 'flex',
         height: '90vh',        
-        padding: '0 5%',
         flexDirection: 'row'
     },
 

@@ -10,7 +10,8 @@ import {
   Dashboard,
   Slides,
   Users,
-  Profile
+  Profile,
+  SlideEdit
 } from './containers'
 
 import App from './App';
@@ -22,6 +23,7 @@ ReactDOM.render(
         <Route exact path="/" component={ App }>
           <IndexRoute component={ Dashboard } />
           <Route path="/slides" component={ Slides } />
+          <Route path="/slide/:id" component={ SlideEdit } />
           <Route path="/users" component={ Users } />
           <Route path="/profile" component={ Profile } />
         </Route>

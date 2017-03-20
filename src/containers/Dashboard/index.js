@@ -2,7 +2,12 @@ import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
 
+import {browserHistory} from 'react-router';
+
 import styles from './styles';
+
+// Components
+import { Card } from '../../components';
 
 class Dashboard extends Component {
     constructor(props){
@@ -11,12 +16,19 @@ class Dashboard extends Component {
 
         }
     }
+
+    handleClick(){
+        browserHistory.push('/slide')
+    }
+
     render(){
-        console.log(this.props)
+        let {slides} = this.props;
         return(
             <div style={ styles.container }>
 
-                <h2>HOME</h2>
+                {
+                    slides.map((slide)=> <Card action={ ()=> this.handleClick()  } text={ slide.title } hero={ slide.hero } />)
+                }
 
             </div>
         )
@@ -26,7 +38,8 @@ class Dashboard extends Component {
 function mapStateToProps(state) {
   return {
     user : state.user,
-    logged: state.logged
+    logged: state.logged,
+    slides : state.slides
   };
 }
 
