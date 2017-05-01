@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import {browserHistory} from 'react-router';
 
+
+
 import styles from './styles';
 
 // Components
@@ -17,18 +19,12 @@ class Dashboard extends Component {
         }
     }
 
-    handleClick(){
-        browserHistory.push('/slide')
-    }
 
     render(){
-        let {slides} = this.props;
         return(
             <div style={ styles.container }>
 
-                {
-                    slides.map((slide)=> <Card action={ ()=> this.handleClick()  } text={ slide.title } hero={ slide.hero } />)
-                }
+            
 
             </div>
         )
@@ -37,9 +33,8 @@ class Dashboard extends Component {
 
 function mapStateToProps(state) {
   return {
-    user : state.user,
-    logged: state.logged,
-    slides : state.slides
+    users : state.user,
+    logged: state.logged
   };
 }
 

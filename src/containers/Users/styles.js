@@ -6,6 +6,7 @@ const styles = {
         height: '86vh',
         alignItems: 'center',
         paddingTop: '2%',
+        padding: '5% 10%',
         flexDirection: 'column',
         overflow: 'hidden'
     },

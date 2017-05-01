@@ -1,7 +1,20 @@
-import { createStore } from 'redux';
+import { createStore, applyMiddleware, combineReducers } from 'redux';
+import thunk from 'redux-thunk';
 
-import reducer from '../reducers';
+import {user} from '../reducers'
 
-const store = createStore(reducer)
+
+
+
+const reducer = combineReducers({user});
+const store = createStore(
+  user,
+  applyMiddleware(thunk)
+);
+
+store.subscribe(() =>{
+    console.log("Store Changed", store.getState());
+});
+
 
 export default store

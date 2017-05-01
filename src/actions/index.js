@@ -1,18 +1,6 @@
-function  getLogin(props) {
-	return {
-		type : 'GET_LOGIN',
-		payload : { props }
-	}
+import auth from './auth'
+
+
+export {
+    auth
 }
-
-function  setLogin(props) {
-	return {
-		type : 'SET_LOGIN',
-		payload : { props }
-	}
-}
-
-
-
-
-export { getLogin, setLogin };

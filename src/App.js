@@ -1,48 +1,45 @@
 import React, { Component } from 'react';
 
-import { Navbar } from './components';
-
 import { connect } from 'react-redux';
-
-import firebase from 'firebase';
-
-import { setLogin } from './actions'
+import { Link } from 'react-router';
 
 import css from './index.css'
+
+import AppBar from 'material-ui/AppBar';
+import Drawer from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
+import IconMenu from 'material-ui/IconMenu';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
 
 class App extends Component {
   constructor(props){
     super(props);
-
+    this.state = {
+      open : false
+    }
     this.menuItems = [
       { text : 'HOME', link: '/' },
-      { text : 'SLIDES', link: '/slides' },
+      { text : 'COMUNIDADES', link: '/slides' },
       { text : 'USERS', link: '/users' }
     ]
   }
 
-  checkAuth(props) {
-        firebase.auth().onAuthStateChanged(function(user) {
-        if (!user) window.location.replace('/login');
-        if(user) {
-          props.dispatch(setLogin(user));
-        }
-        });
-    }
-
-  logout(){
-    firebase.auth().signOut().then(function() {
-      window.location.replace('/login')
-    }, function(error) {
-      // An error happened.
-    });
-  }
 
   render() {
-    this.checkAuth(this.props);
     return (
       <div>
-        <Navbar username={ this.props.user.email } logout={ ()=> this.logout() } items={ this.menuItems } />
+         <AppBar
+            title="Scholas Ciudadania"
+            iconClassNameRight="muidocs-icon-navigation-expand-more"
+            onLeftIconButtonTouchTap={ ()=> this.setState({ open : !this.state.open }) }
+            showMenuIconButton={ true }/>
+          <Drawer open={this.state.open}>
+            <AppBar iconElementLeft={<IconButton><NavigationClose /></IconButton>}
+            onLeftIconButtonTouchTap={ ()=> this.setState({ open : !this.state.open }) } />
+            <Link to="/communities"><MenuItem>Comunidades</MenuItem></Link>
+            <Link to="/users"><MenuItem>Usuarios</MenuItem></Link>
+          </Drawer>
         { this.props.children }
       </div>
     );
@@ -53,7 +50,6 @@ class App extends Component {
 function mapStateToProps(state) {
   return {
     user : state.user,
-    logged: state.logged
   };
 }
 
