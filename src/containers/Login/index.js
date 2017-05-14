@@ -25,7 +25,7 @@ class Login extends Component {
     componentWillReceiveProps(nextProps) {
         console.log(nextProps)
         let { me } = this.props;
-        if(me) browserHistory.push('/home')
+        if(me) browserHistory.push('/users')
     }
 
     componentWillMount(){
