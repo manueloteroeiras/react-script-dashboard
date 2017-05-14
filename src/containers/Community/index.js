@@ -4,7 +4,7 @@ import styles from './styles';
 
 import { connect } from 'react-redux';
 
-import { get_communities, add_community } from '../../actions/community';
+import { get_communities, add_community, update_community, delete_community } from '../../actions/community';
 // import { Card } from '../../components';
 
 import Drawer from 'material-ui/Drawer';
@@ -14,6 +14,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Avatar from 'material-ui/Avatar';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -35,7 +36,8 @@ class Community extends Component {
         super(props)
         this.state = {
             open: false,
-            newCommunity : {
+            actionButton : 'CREAR',
+            community : {
                 name: '',
                 topic: '',
                 bannerImg: ''
@@ -53,8 +55,27 @@ class Community extends Component {
         this.setState({ open: false })
     }
 
+    updateCommunity(community){
+        console.log(community)
+        this.props.dispatch(update_community(community))
+        this.setState({ open: false })
+    }
+
     componentWillReceiveProps(nextProps){
         console.log(nextProps)
+    }
+
+    getItem(community){
+        this.setState({ community: community, open: true, actionButton: 'GUARDAR' })
+    }
+
+    deleteCommunity(community){
+        this.props.dispatch(delete_community(community))
+        this.setState({ open: false })
+    }
+
+    actionButton(community){
+        (this.state.actionButton == 'CREAR') ? this.createCommunity(this.state.community) : this.updateCommunity(this.state.community)
     }
 
 
@@ -74,6 +95,7 @@ class Community extends Component {
                                 <CardMedia
                                     overlay={<CardTitle title={ community.name } />}>
                                     <img height="200" src={ community.bannerImg } />
+                                     <FlatButton label="Open" onTouchTap={() => this.getItem(community)} />
                                 </CardMedia>
                             </Card>
                         )
@@ -92,30 +114,33 @@ class Community extends Component {
                     </Avatar>
                     <div style={{ display: 'flex', flexDirection: 'column', padding: '5%' }} >
                         <TextField
-                            value={ this.state.newCommunity.name }
-                            onChange={ (e, value) => this.setState({ newCommunity : { ...this.state.newCommunity , ...{ name: value } } }) }
+                            value={ this.state.community.name }
+                            onChange={ (e, value) => this.setState({ community : { ...this.state.community , ...{ name: value } } }) }
                             floatingLabelText="Nombre"/>
                             <br/>
                         <TextField
-                            value={ this.state.newCommunity.topic }
-                            onChange={ (e, value) => this.setState({ newCommunity : { ...this.state.newCommunity , ...{ topic: value } } }) }
+                            value={ this.state.community.topic }
+                            onChange={ (e, value) => this.setState({ community : { ...this.state.community , ...{ topic: value } } }) }
                             floatingLabelText="Topic"/>
                             <br/>
                         <TextField
-                            value={ this.state.newCommunity.bannerImg }
-                            onChange={ (e, value) => this.setState({ newCommunity : { ...this.state.newCommunity , ...{ bannerImg: value } } }) }
+                            value={ this.state.community.bannerImg }
+                            onChange={ (e, value) => this.setState({ community : { ...this.state.community , ...{ bannerImg: value } } }) }
                             floatingLabelText="Image src"/>
                             <br/>
                         
                     </div>
 
                     <div style={{ flexDirection: 'row',position: 'absolute',bottom: 50, padding: '0 20px' }}>
-                        <RaisedButton label="CREAR" onTouchTap={()=>  this.createCommunity(this.state.newCommunity) } primary={true} style={{ marginRight: 10 }} />
-                        <RaisedButton label="CANCELAR" onTouchTap={()=> this.setState({ open: false, newCommunity: {} }) } secondary={true} />
+                        <RaisedButton label={ this.state.actionButton } onTouchTap={()=>  this.actionButton(this.state.community) } primary={true} style={{ marginRight: 10 }} />
+                        <RaisedButton label="CANCELAR" onTouchTap={()=> this.setState({ open: false, community: {} }) } secondary={true} />
+                        {
+                            (this.state.actionButton == 'CREAR') ? null : <RaisedButton label="ELIMINAR" onTouchTap={()=> this.deleteCommunity(this.state.community) } secondary={true} />
+                        }
                     </div>
                 </Drawer>
 
-                <FloatingActionButton onTouchTap={()=> this.setState({ open: true }) } secondary={true} style={{ position: 'absolute', bottom: 25, right: 25 }}>
+                <FloatingActionButton onTouchTap={()=> this.setState({ open: true, actionButton: 'CREAR' }) } secondary={true} style={{ position: 'absolute', bottom: 25, right: 25 }}>
                     <ContentAdd />
                 </FloatingActionButton>
 

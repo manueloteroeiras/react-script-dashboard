@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
 
 import css from './index.css'
 
@@ -25,8 +25,15 @@ class App extends Component {
     ]
   }
 
+  handleClose(route){
+    this.setState({ open: false });
+    browserHistory.push(route)
+    
+  }
+
 
   render() {
+    console.log(this.props)
     return (
       <div>
          <AppBar
@@ -37,8 +44,8 @@ class App extends Component {
           <Drawer open={this.state.open}>
             <AppBar iconElementLeft={<IconButton><NavigationClose /></IconButton>}
             onLeftIconButtonTouchTap={ ()=> this.setState({ open : !this.state.open }) } />
-            <Link to="/communities"><MenuItem>Comunidades</MenuItem></Link>
-            <Link to="/users"><MenuItem>Usuarios</MenuItem></Link>
+            <MenuItem onTouchTap={()=>this.handleClose('communities')}>Comunidades</MenuItem>
+            <MenuItem onTouchTap={()=>this.handleClose('users')}>Usuarios</MenuItem>
           </Drawer>
         { this.props.children }
       </div>
