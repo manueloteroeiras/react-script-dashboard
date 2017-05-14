@@ -183,7 +183,7 @@ class Users extends Component {
                                     style={{ color: '#000' }}
                                     value={ this.state.newUser.community }
                                     onChange={(e, key, payload)=> this.setState({ newUser :{ ...this.state.newUser, ...{ community: payload } } })}>
-                                        { this.props.communities.map((community, key) =>{
+                                        { (!this.props.communities)? null :this.props.communities.map((community, key) =>{
                                               return <MenuItem key={ key } value={community._id} primaryText={ community.name } /> 
                                             })}
                                 </SelectField>
