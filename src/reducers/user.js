@@ -19,10 +19,20 @@ export default function user(state = initialState, action = {}) {
         loginStatus : 'LOGIN_INVALIDATE',
         error : action.payload
       };
+
     case "LOGIN":
       return { ...state, me : action.payload, loginStatus : 'LOGIN_OK' }
+
     case "FETCHED_USERS":
       return { ...state, users : action.payload, usersStatus : 'FETCHED_USERS' }
+
+    case "USER_CREATED":
+      return { ...state, users : state.users.concat(action.payload)  }
+
+    case "USER_DELETED":
+      let id = action.payload.replace(' removed!', '')
+      let users = state.users.filter((user)=> user._id != id )
+      return { ...state, ...{ users : users } }
 
     case "FETCHED_COMMUNITY":
       return { communities : action.payload, usersStatus : 'FETCHED_COMMUNITY' }

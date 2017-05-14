@@ -61,6 +61,7 @@ const addUser = async (user) => {
       headers: { 'Content-Type': 'application/json' },
       data: user
     }).then(response => {
+      console.log(response)
         data = response.data
     }).catch((err) => {
       console.log(JSON.stringify(err))
@@ -68,7 +69,31 @@ const addUser = async (user) => {
 
     if (!data) throw 'login failed';
 
-    return data.results;
+    return data;
+
+  } catch(e) {
+    throw e;
+
+  }
+
+}
+const deleteUser = async (user) => {
+
+  try {
+    let data = {};
+    await axios(`${ API_URL }/api/users/delete/${ user._id }`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    }).then(response => {
+      console.log(response)
+        data = response.data
+    }).catch((err) => {
+      console.log(JSON.stringify(err))
+    });
+
+    if (!data) throw 'login failed';
+
+    return data;
 
   } catch(e) {
     throw e;
@@ -81,5 +106,6 @@ const addUser = async (user) => {
 export {
   login,
   getUsers,
-  addUser
+  addUser,
+  deleteUser
 }
