@@ -22,12 +22,20 @@ import {
 
 import App from './App';
 
+const chekUser = () =>{
+  console.log("ENTERRR")
+  let status = store.getState();
+
+  if (status.loginStatus == 'LOGOUT'){
+    browserHistory.replace('/')
+  }
+}
 
 ReactDOM.render(
   <Provider store={ store }>
     <MuiThemeProvider>
       <Router history={ browserHistory }>
-        <Route exact path="/home" component={ App }>
+        <Route onEnter={()=> chekUser()} exact path="/home" component={ App }>
           <IndexRoute component={ Dashboard } />
           <Route path="/users" component={ Users } />
           <Route path="/communities" component={ Community } />

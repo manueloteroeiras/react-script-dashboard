@@ -25,7 +25,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Avatar from 'material-ui/Avatar';
 import RaisedButton from 'material-ui/RaisedButton';
-
+import LinearProgress from 'material-ui/LinearProgress';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
@@ -38,6 +38,17 @@ import {
   purple500,
 } from 'material-ui/styles/colors';
 
+const defaultUser =  {
+                firstName: '',
+                lastName: '',
+                email: '',
+                community : '',
+                role: 'user',
+                profilePicture: 'https://ibb.co/mZ8mO5',
+                password: 'scholas'
+
+            }
+
 class Users extends Component {
     constructor(props){
         super(props)
@@ -49,16 +60,7 @@ class Users extends Component {
                 firstName: '',
                 lastName: ''
             },
-            newUser : {
-                firstName: '',
-                lastName: '',
-                email: '',
-                community : '',
-                role: 'user',
-                profilePicture: 'https://ibb.co/mZ8mO5',
-                password: 'scholas'
-
-            }
+            newUser : defaultUser
         }
     }
     
@@ -101,6 +103,10 @@ class Users extends Component {
         this.setState({ open: false })
     }
 
+    renderSpinner(){
+        return <LinearProgress style={{ height: 10 }} mode="indeterminate" />
+    }
+
 
     render(){
         console.log(this.props)
@@ -124,7 +130,7 @@ class Users extends Component {
 
                     <TableBody>
                         {
-                            this.props.users.map((user, key)=>{
+                            (!this.props.users)? null : this.props.users.map((user, key)=>{
                                 return(
                                     <TableRow key={ key }>
                                         <TableRowColumn>{ key }</TableRowColumn>
@@ -143,12 +149,12 @@ class Users extends Component {
                 </Table>
 
 
-                <Drawer style={{ flexDirection : 'column' }} docked={false} width={500} openSecondary={true} open={this.state.open} >
+                <Drawer style={{ flexDirection : 'column' }} docked={false} width={(window.innerWidth > 700)? window.innerWidth / 2.8 : window.innerWidth } openSecondary={true} open={this.state.open} >
                     
-                    <AppBar showMenuIconButton={ false } title={ 'Nuevo Usuario' } />
+                    <AppBar showMenuIconButton={ false } style={{ backgroundColor: '#00a992' }} title={ ( this.state.actionButton == "CREAR")? 'Nuevo Usuario' : this.state.newUser.firstName } />
                     
                     <Avatar
-                        style={{ position : 'absolute', top: 80, right: 25 }}
+                        style={{ position : 'absolute', top: 80, right: 25,  }}
                         color={blue300}
                         backgroundColor={purple500}
                         size={80}>A
@@ -183,7 +189,7 @@ class Users extends Component {
                                     style={{ color: '#000' }}
                                     value={ this.state.newUser.community }
                                     onChange={(e, key, payload)=> this.setState({ newUser :{ ...this.state.newUser, ...{ community: payload } } })}>
-                                        { (!this.props.communities)? null :this.props.communities.map((community, key) =>{
+                                        { (!this.props.communities)? this.renderSpinner() :this.props.communities.map((community, key) =>{
                                               return <MenuItem key={ key } value={community._id} primaryText={ community.name } /> 
                                             })}
                                 </SelectField>
@@ -216,7 +222,7 @@ class Users extends Component {
                     </div>
                 </Drawer>
 
-                <FloatingActionButton onTouchTap={()=> this.setState({ open: true, actionButton: 'CREAR' }) } secondary={true} style={{ position: 'absolute', bottom: 25, right: 25 }}>
+                <FloatingActionButton onTouchTap={()=> this.setState({ open: true, actionButton: 'CREAR', newUser: defaultUser }) } secondary={true} style={{ position: 'absolute', bottom: 25, right: 25 }}>
                     <ContentAdd />
                 </FloatingActionButton>
 

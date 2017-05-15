@@ -27,7 +27,7 @@ class App extends Component {
 
   handleClose(route){
     this.setState({ open: false });
-    browserHistory.push(route)
+    browserHistory.replace(route)
     
   }
 
@@ -37,12 +37,13 @@ class App extends Component {
     return (
       <div>
          <AppBar
+            style={{ backgroundColor: '#00a992' }}
             title="Scholas Ciudadania"
             iconClassNameRight="muidocs-icon-navigation-expand-more"
             onLeftIconButtonTouchTap={ ()=> this.setState({ open : !this.state.open }) }
             showMenuIconButton={ true }/>
           <Drawer open={this.state.open}>
-            <AppBar iconElementLeft={<IconButton><NavigationClose /></IconButton>}
+            <AppBar style={{ backgroundColor: '#00a992' }} iconElementLeft={<IconButton><NavigationClose /></IconButton>}
             onLeftIconButtonTouchTap={ ()=> this.setState({ open : !this.state.open }) } />
             <MenuItem onTouchTap={()=>this.handleClose('communities')}>Comunidades</MenuItem>
             <MenuItem onTouchTap={()=>this.handleClose('users')}>Usuarios</MenuItem>

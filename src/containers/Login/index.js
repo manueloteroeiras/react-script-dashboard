@@ -2,29 +2,31 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
 import { browserHistory } from 'react-router';
-
 import FontAwesome from 'react-fontawesome';
-
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-
+import CircularProgress from 'material-ui/CircularProgress';
 import { auth } from '../../actions';
 
 import styles from './styles';
 
 class Login extends Component {
+ 
+
     constructor(props){
         super(props)
         this.state = {
             username: 'student@bitflowlabs.com',
             pass: 'demo',
-            sending : false
+            sending : false,
+            login: false
         }
     }
 
     componentWillReceiveProps(nextProps) {
         console.log(nextProps)
         let { me } = this.props;
+       
         if(me) browserHistory.push('/users')
     }
 
@@ -32,10 +34,13 @@ class Login extends Component {
     }
 
     login(){
+        this.setState({ login: true })
         this.props.dispatch(auth(this.state.username, this.state.pass))
     }
 
-
+    renderSpinner(){
+        return <CircularProgress size={40} thickness={4} />
+    }
 
     render(){ 
         return(
@@ -52,7 +57,7 @@ class Login extends Component {
                 hintText="Hint Text"
                 type="password"/>
 
-               <RaisedButton primary={true} onTouchTap={()=> this.login()} label="LOGIN" />
+               {(this.state.login) ? this.renderSpinner() : <RaisedButton primary={true} onTouchTap={()=> this.login()} label="LOGIN" />}
             </div>
         )
     }
