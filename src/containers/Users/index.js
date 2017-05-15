@@ -62,10 +62,14 @@ class Users extends Component {
             },
             newUser : defaultUser
         }
+        
     }
     
     componentWillMount(){
         this.props.dispatch(get_users())
+    }
+
+    componentDidMount(){
         this.props.dispatch(get_communities())
     }
 
@@ -74,12 +78,10 @@ class Users extends Component {
             ...this.props.users[key],
             ...{community: this.props.users[key].community._id }
         }
-        console.log(user)
         this.setState({ newUser: user, open: true, actionButton: 'DELETE' })
     }
 
     renderCommunities(community){
-        console.log(community)
         return(
             <SelectField
                 floatingLabelText="Comunidad"
@@ -130,7 +132,7 @@ class Users extends Component {
 
                     <TableBody>
                         {
-                            (!this.props.users)? null : this.props.users.map((user, key)=>{
+                            (!this.props.users)? this.renderSpinner() : this.props.users.map((user, key)=>{
                                 return(
                                     <TableRow key={ key }>
                                         <TableRowColumn>{ key }</TableRowColumn>
@@ -152,30 +154,27 @@ class Users extends Component {
                 <Drawer style={{ flexDirection : 'column' }} docked={false} width={(window.innerWidth > 700)? window.innerWidth / 2.8 : window.innerWidth } openSecondary={true} open={this.state.open} >
                     
                     <AppBar showMenuIconButton={ false } style={{ backgroundColor: '#00a992' }} title={ ( this.state.actionButton == "CREAR")? 'Nuevo Usuario' : this.state.newUser.firstName } />
-                    
-                    <Avatar
-                        style={{ position : 'absolute', top: 80, right: 25,  }}
-                        color={blue300}
-                        backgroundColor={purple500}
-                        size={80}>A
-                    </Avatar>
 
                     <div style={{ display: 'flex', flexDirection: 'column', padding: '5%' }} >
                         <TextField
+                            style={{ width: '100%' }}
                             value={ this.state.newUser.firstName }
                             onChange={ (e, value) => this.setState({ newUser : { ...this.state.newUser , ...{ firstName: value } } }) }
                             floatingLabelText="Nombre"/>
                             <br/>
                         <TextField
+                            style={{ width: '100%' }}
                             value={ this.state.newUser.lastName }
                             onChange={ (e, value) => this.setState({ newUser : { ...this.state.newUser , ...{ lastName: value } } }) }
                             floatingLabelText="Apellido"/><br/>
                         <TextField
+                            style={{ width: '100%' }}
                             value={ this.state.newUser.email }
                             onChange={ (e, value) => this.setState({ newUser : { ...this.state.newUser , ...{ email: value } } }) }
                             floatingLabelText="Nombre"/>
                             <br/>
                         <TextField
+                            style={{ width: '100%' }}
                             value={ this.state.newUser.password }
                             onChange={ (e, value) => this.setState({ newUser : { ...this.state.newUser , ...{ password: value } } }) }
                             floatingLabelText="Password"
@@ -186,7 +185,7 @@ class Users extends Component {
                             { 
                                 <SelectField
                                     floatingLabelText="Comunidad"
-                                    style={{ color: '#000' }}
+                                    style={{ color: '#000', width: '100%' }}
                                     value={ this.state.newUser.community }
                                     onChange={(e, key, payload)=> this.setState({ newUser :{ ...this.state.newUser, ...{ community: payload } } })}>
                                         { (!this.props.communities)? this.renderSpinner() :this.props.communities.map((community, key) =>{
@@ -197,7 +196,7 @@ class Users extends Component {
 
                             <SelectField
                                     floatingLabelText="Rol"
-                                    style={{ color: '#000' }}
+                                    style={{ color: '#000', width: '100%' }}
                                     value={ this.state.newUser.role }
                                     onChange={(e, key, payload)=> this.setState({ newUser :{ ...this.state.newUser, ...{ role: payload } } })}>
                                         <MenuItem value={ 'user' } primaryText={ 'User' } /> 

@@ -35,10 +35,15 @@ export default function user(state = initialState, action = {}) {
       return { ...state, ...{ users : users } }
 
     case "FETCHED_COMMUNITY":
-      return { communities : action.payload, usersStatus : 'FETCHED_COMMUNITY' }
+      return { ...state, communities : action.payload, usersStatus : 'FETCHED_COMMUNITY' }
       
     case "COMMUNITY_CREATED":
-      return { ...state, communities : state.communities.push(action.payload),  }
+      return { ...state, communities : state.communities.concat(action.payload),  }
+
+    case "COMMUNITY_DELETED":
+      let idcommunity = action.payload.replace(' removed!', '')
+      let communities = state.communities.filter((community)=> community._id != idcommunity )
+      return { ...state, ...{ communities : communities } }
 
     
 

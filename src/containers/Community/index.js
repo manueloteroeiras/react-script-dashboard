@@ -20,6 +20,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
 import CircularProgress from 'material-ui/CircularProgress';
+import DatePicker from 'material-ui/DatePicker';
 
 
 import {
@@ -40,7 +41,8 @@ class Community extends Component {
             community : {
                 name: '',
                 topic: '',
-                bannerImg: ''
+                bannerImg: '',
+                date: new Date()
             }
         }
     }
@@ -87,15 +89,15 @@ class Community extends Component {
                     (!this.props.communities) ?  <CircularProgress size={80} thickness={5} /> :
                     this.props.communities.map((community, key) => {
                         return (
-                            <Card style={{ height: 200, width: '30%' , margin: '0 10px' }} >
+                            <Card onTouchTap={() => this.getItem(community)} style={{ height: 200, flex: 1 , margin: '25px 10px', flexBasis: '250' }} >
                                 <CardHeader
+                                style={{ minWidth: 300 }}
                                 title={ community.name }
                                 subtitle={ community.topic }
                                 avatar={ community.bannerImg }/>
                                 <CardMedia
+                                    style={{ backgroundImage: `url(${ community.bannerImg })`, backgroundSize: 'cover', height: '150px', backgroundPosition: 'center' }}
                                     overlay={<CardTitle title={ community.name } />}>
-                                    <img height="200" src={ community.bannerImg } />
-                                     <FlatButton label="Open" onTouchTap={() => this.getItem(community)} />
                                 </CardMedia>
                             </Card>
                         )
@@ -104,14 +106,8 @@ class Community extends Component {
 
                 
 
-                <Drawer style={{ flexDirection : 'column' }} docked={false} width={500} openSecondary={true} open={this.state.open} >
-                    <AppBar showMenuIconButton={ false } title={ 'Nueva Comunidad' } />
-                    <Avatar
-                        style={{ position : 'absolute', top: 80, right: 25 }}
-                        color={blue300}
-                        backgroundColor={purple500}
-                        size={80}>C
-                    </Avatar>
+                <Drawer style={{ flexDirection : 'column' }} docked={false} width={(window.innerWidth > 700)? window.innerWidth / 2.8 : window.innerWidth } openSecondary={true} open={this.state.open} >
+                    <AppBar showMenuIconButton={ false } title={ 'Nueva Comunidad' } style={{ backgroundColor: '#00a992' }} />
                     <div style={{ display: 'flex', flexDirection: 'column', padding: '5%' }} >
                         <TextField
                             value={ this.state.community.name }
@@ -128,12 +124,14 @@ class Community extends Component {
                             onChange={ (e, value) => this.setState({ community : { ...this.state.community , ...{ bannerImg: value } } }) }
                             floatingLabelText="Image src"/>
                             <br/>
+
+                        <DatePicker hintText={ 'Dia' } onChange={(date)=> this.setState({ community : { ...this.state.community , ...{ date: new Date(date) } } }) } container="inline" />
                         
                     </div>
 
                     <div style={{ flexDirection: 'row',position: 'absolute',bottom: 50, padding: '0 20px' }}>
                         <RaisedButton label={ this.state.actionButton } onTouchTap={()=>  this.actionButton(this.state.community) } primary={true} style={{ marginRight: 10 }} />
-                        <RaisedButton label="CANCELAR" onTouchTap={()=> this.setState({ open: false, community: {} }) } secondary={true} />
+                        <RaisedButton label="CANCELAR" style={{ margin: '0 10px' }} onTouchTap={()=> this.setState({ open: false, community: {} }) } primary={true} />
                         {
                             (this.state.actionButton == 'CREAR') ? null : <RaisedButton label="ELIMINAR" onTouchTap={()=> this.deleteCommunity(this.state.community) } secondary={true} />
                         }

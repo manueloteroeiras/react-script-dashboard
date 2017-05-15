@@ -12,6 +12,12 @@ import IconButton from 'material-ui/IconButton';
 import IconMenu from 'material-ui/IconMenu';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 
+import FlatButton from 'material-ui/FlatButton';
+
+const Menu = (props) =>{
+  return <FlatButton {...this.props} label="Login" />
+}
+
 class App extends Component {
   constructor(props){
     super(props);

@@ -87,7 +87,7 @@ const deleteCommunities = async (community) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' }
     }).then(response => {
-        data = response
+        data = response.data
     }).catch((err) => {
       console.log(JSON.stringify(err))
     });
