@@ -14,7 +14,7 @@ const login = async (username, password) => {
         data = response.data
         console.log({ data: data, alert:"ALERTTT" })
     }).catch((err) => {
-      console.log(JSON.stringify(err))
+      console.log(err)
     });
 
     if (!data) throw 'login failed';

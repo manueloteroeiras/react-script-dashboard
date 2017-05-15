@@ -10,8 +10,15 @@ export default (email, password) => {
         email = email.toLowerCase();
 
         await login(email, password).then((resp) =>{
-            (resp != 'Invalid email or password') ? dispatch({ type: 'LOGIN', payload: resp }) : dispatch({ type: 'LOGIN_INVALIDATE', payload: 'Invalid email or password' })
+            console.log(resp)
+            if(resp && resp.role === "admin") {
+                 dispatch({ type: 'LOGIN', payload: resp }) 
+            }
+            else{
+                dispatch({ type: 'LOGIN_INVALIDATE', payload: 'Not Admin' })
+            }
         }).catch((err)=>{
+            console.log(err)
             dispatch({ type: 'LOGIN_INVALIDATE', payload: err });    
         });
 

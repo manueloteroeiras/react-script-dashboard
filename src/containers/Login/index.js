@@ -16,8 +16,8 @@ class Login extends Component {
     constructor(props){
         super(props)
         this.state = {
-            username: 'student@bitflowlabs.com',
-            pass: 'demo',
+            username: '',
+            pass: '',
             sending : false,
             login: false
         }
@@ -26,8 +26,9 @@ class Login extends Component {
     componentWillReceiveProps(nextProps) {
         console.log(nextProps)
         let { me } = this.props;
-       
-        if(me) browserHistory.push('/users')
+        if(nextProps.state.loginStatus == "LOGIN_OK"){
+            browserHistory.push('/users')
+        }
     }
 
     componentWillMount(){
@@ -48,16 +49,18 @@ class Login extends Component {
 
                <TextField
                 value={ this.state.username }
-                onChange={ (e, username) => this.setState(username) }
+                onChange={ (e, username) => this.setState({username}) }
                 hintText="Hint Text"/>
                 <br/>
                 <TextField
                 value={ this.state.pass }
-                onChange={ (e, pass) => this.setState(pass) }
+                onChange={ (e, pass) => this.setState({pass}) }
                 hintText="Hint Text"
                 type="password"/>
 
-               {(this.state.login) ? this.renderSpinner() : <RaisedButton primary={true} onTouchTap={()=> this.login()} label="LOGIN" />}
+                {(this.props.state.loginStatus == "LOGIN_INVALIDATE") ?<p>{  this.props.state.error }</p> : null}
+
+               {(this.props.state.loginStatus == "LOGIN_FETCHING") ? this.renderSpinner() : <RaisedButton primary={true} onTouchTap={()=> this.login()} label="LOGIN" />}
             </div>
         )
     }
@@ -67,6 +70,7 @@ function mapStateToProps(state) {
     console.log(state)
   return {
     me : state.me,
+    state: state
   };
 }
 
