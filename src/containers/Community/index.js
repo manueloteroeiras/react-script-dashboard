@@ -32,33 +32,33 @@ import {
   purple500,
 } from 'material-ui/styles/colors';
 
+const initCommunity = {
+    name: '',
+    topic: '',
+    bannerImg: '',
+    date: new Date()
+}
+
 class Community extends Component {
     constructor(props){
         super(props)
         this.state = {
             open: false,
             actionButton : 'CREAR',
-            community : {
-                name: '',
-                topic: '',
-                bannerImg: '',
-                date: new Date()
-            }
+            community : initCommunity
         }
     }
-    
+
     componentWillMount(){
         this.props.dispatch(get_communities())
     }
 
     createCommunity(post){
-        console.log(post)
         this.props.dispatch(add_community(post))
         this.setState({ open: false })
     }
 
     updateCommunity(community){
-        console.log(community)
         this.props.dispatch(update_community(community))
         this.setState({ open: false })
     }
@@ -84,7 +84,7 @@ class Community extends Component {
     render(){
         return(
             <div style={ styles.container }>
-                
+
                 {
                     (!this.props.communities) ?  <CircularProgress size={80} thickness={5} /> :
                     this.props.communities.map((community, key) => {
@@ -104,9 +104,9 @@ class Community extends Component {
                     })
                 }
 
-                
 
-                <Drawer style={{ flexDirection : 'column' }} docked={false} width={(window.innerWidth > 700)? window.innerWidth / 2.8 : window.innerWidth } openSecondary={true} open={this.state.open} >
+
+                <Drawer style={{ flexDirection : 'column' }} docked={false} width={(window.innerWidth > 800)? window.innerWidth / 2.8 : window.innerWidth } openSecondary={true} open={this.state.open} >
                     <AppBar showMenuIconButton={ false } title={ 'Nueva Comunidad' } style={{ backgroundColor: '#00a992' }} />
                     <div style={{ display: 'flex', flexDirection: 'column', padding: '5%' }} >
                         <TextField
@@ -126,7 +126,7 @@ class Community extends Component {
                             <br/>
 
                         <DatePicker hintText={ 'Dia' } onChange={(date)=> this.setState({ community : { ...this.state.community , ...{ date: new Date(date) } } }) } container="inline" />
-                        
+
                     </div>
 
                     <div style={{ flexDirection: 'row',position: 'absolute',bottom: 50, padding: '0 20px' }}>
@@ -138,7 +138,7 @@ class Community extends Component {
                     </div>
                 </Drawer>
 
-                <FloatingActionButton onTouchTap={()=> this.setState({ open: true, actionButton: 'CREAR' }) } secondary={true} style={{ position: 'absolute', bottom: 25, right: 25 }}>
+                <FloatingActionButton onTouchTap={()=> this.setState({ open: true, actionButton: 'CREAR', community: initCommunity }) } secondary={true} style={{ position: 'absolute', bottom: 25, right: 25 }}>
                     <ContentAdd />
                 </FloatingActionButton>
 

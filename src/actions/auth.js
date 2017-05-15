@@ -1,6 +1,6 @@
 import { login }  from '../services/user';
 
-export default (email, password) => {
+const auth = (email, password) => {
   return async (dispatch, getState) => {
 
     dispatch({ type: 'LOGIN_FETCHING' });
@@ -33,4 +33,19 @@ export default (email, password) => {
 
   }
 
+}
+const chengeStatus = (email, password) => {
+  return async (dispatch, getState) => {
+
+    dispatch({ type: 'LOGIN' });
+   
+
+  }
+
+}
+
+
+export {
+    auth,
+    chengeStatus
 }

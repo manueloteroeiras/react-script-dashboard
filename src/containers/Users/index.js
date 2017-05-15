@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 
 import FontAwesome from 'react-fontawesome';
 
-import { get_users, add_user, delete_user } from '../../actions/user';
+import { get_users, add_user, delete_user, update_user } from '../../actions/user';
 import { get_communities } from '../../actions/community';
 import { Card } from '../../components';
 
@@ -62,9 +62,9 @@ class Users extends Component {
             },
             newUser : defaultUser
         }
-        
+
     }
-    
+
     componentWillMount(){
         this.props.dispatch(get_users())
     }
@@ -89,7 +89,7 @@ class Users extends Component {
                 style={{ color: '#000' }}
                 onChange={(e)=> console.log(e)}>
                 { this.props.communities.map((community) =>{
-                    return <MenuItem value={community._id} primaryText={ community.name } /> 
+                    return <MenuItem value={community._id} primaryText={ community.name } />
                 })}
             </SelectField>
         )
@@ -98,6 +98,11 @@ class Users extends Component {
     creacteUser(){
         this.props.dispatch(add_user(this.state.newUser))
         this.setState({ open: false })
+    }
+
+    updateUser(){
+      this.props.dispatch(update_user(this.state.newUser))
+      this.setState({ open: false })
     }
 
     deleteUser(){
@@ -117,13 +122,13 @@ class Users extends Component {
 
 
                 <Table onCellClick={ (event) => this.getItem(event) }>
-                    
+
                     <TableHeader>
                         <TableRow>
                             <TableHeaderColumn>ID</TableHeaderColumn>
                             <TableHeaderColumn>Nombre y Apellido</TableHeaderColumn>
                             <TableHeaderColumn>email</TableHeaderColumn>
-{
+        {
                             // <TableHeaderColumn>Comunidad</TableHeaderColumn>
                             }
                         </TableRow>
@@ -151,8 +156,8 @@ class Users extends Component {
                 </Table>
 
 
-                <Drawer style={{ flexDirection : 'column' }} docked={false} width={(window.innerWidth > 700)? window.innerWidth / 2.8 : window.innerWidth } openSecondary={true} open={this.state.open} >
-                    
+                <Drawer style={{ flexDirection : 'column', overflowY: 'auto' }} docked={false} width={(window.innerWidth > 700)? window.innerWidth / 2.8 : window.innerWidth } openSecondary={true} open={this.state.open} >
+
                     <AppBar showMenuIconButton={ false } style={{ backgroundColor: '#00a992' }} title={ ( this.state.actionButton == "CREAR")? 'Nuevo Usuario' : this.state.newUser.firstName } />
 
                     <div style={{ display: 'flex', flexDirection: 'column', padding: '5%' }} >
@@ -171,7 +176,7 @@ class Users extends Component {
                             style={{ width: '100%' }}
                             value={ this.state.newUser.email }
                             onChange={ (e, value) => this.setState({ newUser : { ...this.state.newUser , ...{ email: value } } }) }
-                            floatingLabelText="Nombre"/>
+                            floatingLabelText="Email"/>
                             <br/>
                         <TextField
                             style={{ width: '100%' }}
@@ -180,45 +185,48 @@ class Users extends Component {
                             floatingLabelText="Password"
                             type={ 'password' }/>
                             <br/>
-                            
-                        
-                            { 
+
+
+                            {
                                 <SelectField
                                     floatingLabelText="Comunidad"
                                     style={{ color: '#000', width: '100%' }}
                                     value={ this.state.newUser.community }
                                     onChange={(e, key, payload)=> this.setState({ newUser :{ ...this.state.newUser, ...{ community: payload } } })}>
                                         { (!this.props.communities)? this.renderSpinner() :this.props.communities.map((community, key) =>{
-                                              return <MenuItem key={ key } value={community._id} primaryText={ community.name } /> 
+                                              return <MenuItem key={ key } value={community._id} primaryText={ community.name } />
                                             })}
                                 </SelectField>
-                            }    
+                            }
 
                             <SelectField
                                     floatingLabelText="Rol"
                                     style={{ color: '#000', width: '100%' }}
                                     value={ this.state.newUser.role }
-                                    onChange={(e, key, payload)=> this.setState({ newUser :{ ...this.state.newUser, ...{ role: payload } } })}>
-                                        <MenuItem value={ 'user' } primaryText={ 'User' } /> 
-                                        <MenuItem value={ 'admin' } primaryText={ 'Admin' } /> 
-                                        <MenuItem value={ 'teache' } primaryText={ 'Profesor' } /> 
+                                    onChange={(e, key, payload)=> this.setState({ newUser : { ...this.state.newUser, ...{ role: payload } } }) }>
+                                        <MenuItem value={ 'user' } primaryText={ 'User' } />
+                                        <MenuItem value={ 'admin' } primaryText={ 'Admin' } />
+                                        <MenuItem value={ 'teacher' } primaryText={ 'Profesor' } />
                                 </SelectField>
-
-                        
                     </div>
 
-                    <div style={{ flexDirection: 'row',position: 'absolute',bottom: 50, padding: '0 20px' }}>
-                        
+                    <div style={{ flexDirection: 'row',padding: '0 20px', margin: '10px 0' }}>
+
                         {
-                            (this.state.actionButton == 'CREAR') ? 
+                            (this.state.actionButton == 'CREAR') ?
 
-                                    <RaisedButton label="CREAR" onTouchTap={()=> this.creacteUser()} primary={true} style={{ marginRight: 10 }} /> : 
+                                    <RaisedButton label="CREAR" onTouchTap={()=> this.creacteUser()} primary={true} style={{ marginRight: 10 }} /> :
 
-                                            <RaisedButton label="ELIMINAR" style={{ marginRight: 10 }} onTouchTap={()=> this.deleteUser(this.state.newUser) } primary={true} />
+                                            <div style={{ flexDirection: 'row' }}>
+                                                <RaisedButton label="GUARDAR " style={{ marginRight: 10 }} onTouchTap={()=> this.updateUser(this.state.newUser) } primary={true} />
+                                                <RaisedButton label="ELIMINAR" style={{ marginRight: 10 }} onTouchTap={()=> this.deleteUser(this.state.newUser) } primary={true} />
+                                            </div>
+
                         }
 
-                        <RaisedButton label="CANCELAR" onTouchTap={()=> this.setState({ open: false, currentUser: {} }) } secondary={true} />
+                        <RaisedButton label="CANCELAR" style={{ flex: 1, margin: '20px 0' }} onTouchTap={()=> this.setState({ open: false, currentUser: {} }) } secondary={true} />
                     </div>
+
                 </Drawer>
 
                 <FloatingActionButton onTouchTap={()=> this.setState({ open: true, actionButton: 'CREAR', newUser: defaultUser }) } secondary={true} style={{ position: 'absolute', bottom: 25, right: 25 }}>

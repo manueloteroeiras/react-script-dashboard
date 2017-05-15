@@ -1,4 +1,4 @@
-import {getUsers, addUser, deleteUser}  from '../services/user';
+import {getUsers, addUser, deleteUser, updateUser}  from '../services/user';
 
 import { browserHistory } from 'react-router'
 
@@ -38,6 +38,30 @@ export function add_user(user) {
         await addUser(user).then((resp) =>{
             console.log(resp)
             dispatch({ type: 'USER_CREATED', payload: resp });
+        }).catch((err)=>{
+            dispatch({ type: 'CREATED_ERROR', payload: err });    
+        });
+
+
+    } catch (err) {
+
+        console.log(err);
+
+        dispatch({ type: 'ERROR', payload: err });    
+
+    }
+
+  }
+
+}
+
+export function update_user(user) {
+  return async (dispatch, getState) => {
+    try { 
+
+        await updateUser(user).then((resp) =>{
+            console.log(resp)
+            dispatch({ type: 'USER_UPDATED', payload: resp });
         }).catch((err)=>{
             dispatch({ type: 'CREATED_ERROR', payload: err });    
         });

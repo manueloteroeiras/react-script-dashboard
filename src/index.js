@@ -23,8 +23,8 @@ import {
 import App from './App';
 
 const chekUser = () =>{
-  console.log("ENTERRR")
   let status = store.getState();
+  let user = localStorage.getItem('user')
 
   if (status.loginStatus == 'LOGOUT'){
     browserHistory.replace('/')

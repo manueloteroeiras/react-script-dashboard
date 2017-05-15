@@ -47,6 +47,11 @@ class App extends Component {
             title="Scholas Ciudadania"
             iconClassNameRight="muidocs-icon-navigation-expand-more"
             onLeftIconButtonTouchTap={ ()=> this.setState({ open : !this.state.open }) }
+            onRightIconButtonTouchTap={ ()=> {
+              localStorage.removeItem('user')
+              browserHistory.replace('/')
+            } }
+            iconElementRight={<FlatButton label="Logout" />}
             showMenuIconButton={ true }/>
           <Drawer open={this.state.open}>
             <AppBar style={{ backgroundColor: '#00a992' }} iconElementLeft={<IconButton><NavigationClose /></IconButton>}

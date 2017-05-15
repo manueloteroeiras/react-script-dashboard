@@ -6,12 +6,14 @@ import FontAwesome from 'react-fontawesome';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import CircularProgress from 'material-ui/CircularProgress';
-import { auth } from '../../actions';
+import { auth, chengeStatus } from '../../actions/auth';
+
+import logo from '../../assets/images/scholas-banner.png'
 
 import styles from './styles';
 
 class Login extends Component {
- 
+
 
     constructor(props){
         super(props)
@@ -24,14 +26,18 @@ class Login extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps)
         let { me } = this.props;
         if(nextProps.state.loginStatus == "LOGIN_OK"){
+            localStorage.setItem("user", 'login');
             browserHistory.push('/users')
         }
     }
 
     componentWillMount(){
+      let user = localStorage.getItem('user')
+      if(user === 'login'){
+        this.props.dispatch(chengeStatus())
+      }
     }
 
     login(){
@@ -43,19 +49,23 @@ class Login extends Component {
         return <CircularProgress size={40} thickness={4} />
     }
 
-    render(){ 
+    render(){
         return(
             <div style={ styles.container }>
+
+               <img src={ logo } style={{ heigth: 100, marginBottom: 50 }} />
 
                <TextField
                 value={ this.state.username }
                 onChange={ (e, username) => this.setState({username}) }
-                hintText="Hint Text"/>
+                hintText="Email"
+                type='text'/>
                 <br/>
-                <TextField
+              <TextField
                 value={ this.state.pass }
+                style={{ marginBottom: 20 }}
                 onChange={ (e, pass) => this.setState({pass}) }
-                hintText="Hint Text"
+                hintText="Password"
                 type="password"/>
 
                 {(this.props.state.loginStatus == "LOGIN_INVALIDATE") ?<p>{  this.props.state.error }</p> : null}

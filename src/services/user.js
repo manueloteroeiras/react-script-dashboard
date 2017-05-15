@@ -53,11 +53,36 @@ const getUsers = async () => {
 }
 
 const addUser = async (user) => {
-
+  console.log(user)
   try {
     let data = {};
     await axios(`${ API_URL }/api/users`, {
       method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: user
+    }).then(response => {
+      console.log(response)
+        data = response.data
+    }).catch((err) => {
+      console.log(JSON.stringify(err))
+    });
+
+    if (!data) throw 'login failed';
+
+    return data;
+
+  } catch(e) {
+    throw e;
+
+  }
+
+}
+const updateUser = async (user) => {
+
+  try {
+    let data = {};
+    await axios(`${ API_URL }/api/users/${ user._id }`, {
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       data: user
     }).then(response => {
@@ -107,5 +132,6 @@ export {
   login,
   getUsers,
   addUser,
-  deleteUser
+  deleteUser,
+  updateUser
 }

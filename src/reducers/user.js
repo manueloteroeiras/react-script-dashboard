@@ -29,6 +29,12 @@ export default function user(state = initialState, action = {}) {
     case "USER_CREATED":
       return { ...state, users : state.users.concat(action.payload)  }
 
+    case "USER_UPDATED":
+      let idUser = action.payload._id
+      let usersUpload = state.users.filter((user)=> user._id != idUser)
+      return { ...state, ...{ users: usersUpload.concat(action.payload) } }
+
+
     case "USER_DELETED":
       let id = action.payload.replace(' removed!', '')
       let users = state.users.filter((user)=> user._id != id )
@@ -36,16 +42,21 @@ export default function user(state = initialState, action = {}) {
 
     case "FETCHED_COMMUNITY":
       return { ...state, communities : action.payload, usersStatus : 'FETCHED_COMMUNITY' }
-      
+
     case "COMMUNITY_CREATED":
-      return { ...state, communities : state.communities.concat(action.payload),  }
+      return { ...state, communities : state.communities.concat(action.payload)  }
+
+    case "COMMUNITY_UPDATED":
+      let idCom = action.payload._id
+      let com = state.communities.filter((community)=> community._id != idCom)
+      return { ...state, ...{ communities: com.concat(action.payload) } }
 
     case "COMMUNITY_DELETED":
       let idcommunity = action.payload.replace(' removed!', '')
       let communities = state.communities.filter((community)=> community._id != idcommunity )
       return { ...state, ...{ communities : communities } }
 
-    
+
 
 
     default:
