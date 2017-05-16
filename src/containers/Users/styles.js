@@ -3,12 +3,12 @@ const styles = {
     container : {
         backgroundColor: '#cfd8dc',
         display: 'flex',
-        height: '86vh',
+        height: '78vh',
         alignItems: 'center',
         paddingTop: '2%',
         padding: '5% 10%',
         flexDirection: 'column',
-        overflow: 'hidden'
+        overflowY: 'hidden !important'
     },
 
     input : {

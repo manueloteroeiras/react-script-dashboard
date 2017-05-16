@@ -1,14 +1,18 @@
 import React, { Component } from 'react'
-
 import styles from './styles';
-
+import FileUpload from 'react-fileupload'
+import FormData from 'form-data'
 import { connect } from 'react-redux';
-
 import FontAwesome from 'react-fontawesome';
-
 import { get_users, add_user, delete_user, update_user } from '../../actions/user';
 import { get_communities } from '../../actions/community';
 import { Card } from '../../components';
+
+import check from '../../assets/images/check.png'
+
+import FileInput from 'react-file-input';
+
+import axios from 'axios'
 
 import {
   Table,
@@ -28,6 +32,10 @@ import RaisedButton from 'material-ui/RaisedButton';
 import LinearProgress from 'material-ui/LinearProgress';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import FontIcon from 'material-ui/FontIcon';
+
+import ActionHome from 'material-ui/svg-icons/action/description';
 
 import {
   blue300,
@@ -54,6 +62,7 @@ class Users extends Component {
         super(props)
         this.state = {
             open: false,
+            modal: false,
             actionButton: 'CREAR',
             newuserMenu: false,
             currentUser : {
@@ -114,12 +123,76 @@ class Users extends Component {
         return <LinearProgress style={{ height: 10 }} mode="indeterminate" />
     }
 
+    handleChange(event){
+        this.setState({file: event.target.files[0]})
+    }
+
+    importFile(){
+        console.log('====================================');
+        console.log(this.state);
+        console.log('====================================');
+
+        let formdata = new FormData();
+        formdata.append(`file`, this.state.file)
+
+        axios('/api/csv/'+ this.state.community , {
+            method: 'POST',
+            data : formdata
+        }).then((response) =>{
+            this.setState({ modal: false })
+            this.props.dispatch(get_users())
+        }).catch((err) => console.log(err))
+
+        setTimeout(()=>{
+            this.setState({ modal: false })
+            this.props.dispatch(get_users())
+        }, 3000)
+    }
+
+    renderModal(){
+        return(
+            <Drawer style={{  overflowY: 'auto',justifyContent: 'center' ,padding: '20px 50px' }} docked={false} width={(window.innerWidth > 700)? 300 : window.innerWidth } openSecondary={true} open={this.state.modal} >
+
+                <SelectField
+                    floatingLabelText="Comunidad"
+                    style={{ color: '#000', width: 200, flex: 1, marginLeft: 50 }}
+                    value={ this.state.community }
+                    onChange={(e, key, payload)=> this.setState({ community : payload  })}>
+                        { (!this.props.communities)? this.renderSpinner() :this.props.communities.map((community, key) =>{
+                                return <MenuItem key={ key } value={community._id} primaryText={ community.name } />
+                            })}
+                </SelectField>
+
+                <div style={{ flex: 1, marginTop: 100, paddingLeft: 50}}>
+                    <RaisedButton label="file.csv"  primary={true} style={{ position: 'absolute', width: 200, height: 20 }} />
+                    <FileInput name="myImage"
+                        accept=".csv,.xlsx"
+                        placeholder="Archivo"
+                        className={{ height: 40, width: '100%', marginTop: 50, border: '1px solid gray' }}
+                        onChange={(event)=>this.handleChange(event)} />
+                    {
+                        (!this.state.file)? null :  <p style={{ color:'#cecece' }}>{ this.state.file.name }</p>
+                    }
+                </div>
+
+            <div style={{ flex: 1 }}>
+                    {
+                        (!this.state.file)? null :  <img src={ check } style={{ width: 100, margin: '25px 100px' }} />
+                    }
+                </div>
+                
+
+                <RaisedButton label="Cargar archivo" onTouchTap={()=> this.importFile()} primary={true} style={{ position: 'absolute', bottom:50, width: 200, right: 50 }} />
+            </Drawer>
+        )
+    }
+
 
     render(){
-        console.log(this.props)
         return(
             <div style={ styles.container }>
 
+                { this.renderModal() }
 
                 <Table onCellClick={ (event) => this.getItem(event) }>
 
@@ -128,7 +201,7 @@ class Users extends Component {
                             <TableHeaderColumn>ID</TableHeaderColumn>
                             <TableHeaderColumn>Nombre y Apellido</TableHeaderColumn>
                             <TableHeaderColumn>email</TableHeaderColumn>
-        {
+                            {
                             // <TableHeaderColumn>Comunidad</TableHeaderColumn>
                             }
                         </TableRow>
@@ -143,7 +216,7 @@ class Users extends Component {
                                         <TableRowColumn>{ key }</TableRowColumn>
                                         <TableRowColumn>{ `${user.firstName} ${user.lastName}` }</TableRowColumn>
                                         <TableRowColumn>{ user.email }</TableRowColumn>
-{
+                                        {
                                         // <TableRowColumn>{ user.community.name }</TableRowColumn>
                                         }
                                     </TableRow>
@@ -229,9 +302,14 @@ class Users extends Component {
 
                 </Drawer>
 
-                <FloatingActionButton onTouchTap={()=> this.setState({ open: true, actionButton: 'CREAR', newUser: defaultUser }) } secondary={true} style={{ position: 'absolute', bottom: 25, right: 25 }}>
+                <FloatingActionButton onTouchTap={()=> this.setState({ open: true, actionButton: 'CREAR', newUser: defaultUser }) } secondary={true} style={{ position: 'fixed', bottom: 25, right: 25 }}>
                     <ContentAdd />
                 </FloatingActionButton>
+                
+                <FloatingActionButton onTouchTap={()=> this.setState({ modal: true }) } style={{ position: 'fixed', bottom: 100, right: 25 }}>
+                    <ActionHome />
+                </FloatingActionButton>
+                    
 
             </div>
         )
