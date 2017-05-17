@@ -18,26 +18,31 @@ var options = {
  
 
 var getFile = function(communityID){
-  fs.readFile('./uploads/users.csv','utf-8', function read(err, data) {
-      insertDocuments(csvjson.toObject(data), communityID)
-  });
+  let file = fs.readFileSync('./uploads/users.csv','utf-8')
+  return {promise : insertDocuments(csvjson.toObject(file), communityID), files: file }
+  
 }
 
 var insertDocuments = function(data, communityID) {
-  let itemsLength = data.length;
-  var count = 0
-  data.map((item, key) =>{
+  let promisesAPI = data.map((item, key) =>{
+    return new Promise((resolve, reject)=>{
       let user = Object.assign({}, item, { password: 'scholas', role: 'user', profilePicture: '', community: communityID });
 
         axios(`${API}/api/users`,{
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           data: user
-        }).then((item)=>{
-          (item.status == 200)? console.log('√') : console.log('X')
-        }).catch((err)=> console.log(err))
+        })
+        .then((response) => resolve(response))
+        .catch((err) => reject(err))
+
+    })
+      
 
   });
+
+  
+  return promisesAPI
 
 }
 
@@ -66,8 +71,10 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 
 app.post('/api/csv/:id', upload.single('file') ,function (req, res) {
-	console.log(req.files)
-  getFile(req.params.id)
+  let promisesAPI = getFile(req.params.id)
+  let { promise, files } = promisesAPI;
+  promise.all(files)
+  console.log(promisesAPI)
 	res.send(200, req.files)
 });
 

@@ -34,6 +34,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import FontIcon from 'material-ui/FontIcon';
+import Toggle from 'material-ui/Toggle';
 
 import ActionHome from 'material-ui/svg-icons/action/description';
 
@@ -52,6 +53,7 @@ const defaultUser =  {
                 email: '',
                 community : '',
                 role: 'user',
+                username: '',
                 profilePicture: 'https://ibb.co/mZ8mO5',
                 password: 'scholas'
 
@@ -87,7 +89,7 @@ class Users extends Component {
             ...this.props.users[key],
             ...{community: this.props.users[key].community._id }
         }
-        this.setState({ newUser: user, open: true, actionButton: 'DELETE' })
+        this.setState({ newUser: { ...defaultUser, ...user }, open: true, actionButton: 'DELETE' })
     }
 
     renderCommunities(community){
@@ -194,16 +196,14 @@ class Users extends Component {
 
                 { this.renderModal() }
 
-                <Table onCellClick={ (event) => this.getItem(event) }>
+                <Table onCellClick={ (event) => this.getItem(event) } allRowsSelected={false} fixedHeader={ true }>
 
-                    <TableHeader>
+                    <TableHeader displaySelectAll={ false } adjustForCheckbox={ false }>
                         <TableRow>
-                            <TableHeaderColumn>ID</TableHeaderColumn>
-                            <TableHeaderColumn>Nombre y Apellido</TableHeaderColumn>
-                            <TableHeaderColumn>email</TableHeaderColumn>
-                            {
-                            // <TableHeaderColumn>Comunidad</TableHeaderColumn>
-                            }
+                            <TableHeaderColumn>Nombre</TableHeaderColumn>
+                            <TableHeaderColumn>Apellido</TableHeaderColumn>
+                            <TableHeaderColumn>Email</TableHeaderColumn>
+                            <TableHeaderColumn>Escuela</TableHeaderColumn>
                         </TableRow>
                     </TableHeader>
 
@@ -213,12 +213,10 @@ class Users extends Component {
                             (!this.props.users)? this.renderSpinner() : this.props.users.map((user, key)=>{
                                 return(
                                     <TableRow key={ key }>
-                                        <TableRowColumn>{ key }</TableRowColumn>
-                                        <TableRowColumn>{ `${user.firstName} ${user.lastName}` }</TableRowColumn>
+                                        <TableRowColumn>{ user.firstName }</TableRowColumn>
+                                        <TableRowColumn>{ user.lastName }</TableRowColumn>
                                         <TableRowColumn>{ user.email }</TableRowColumn>
-                                        {
-                                        // <TableRowColumn>{ user.community.name }</TableRowColumn>
-                                        }
+                                        <TableRowColumn>{ user.username }</TableRowColumn>
                                     </TableRow>
                                 )
                             })
@@ -234,30 +232,42 @@ class Users extends Component {
                     <AppBar showMenuIconButton={ false } style={{ backgroundColor: '#00a992' }} title={ ( this.state.actionButton == "CREAR")? 'Nuevo Usuario' : this.state.newUser.firstName } />
 
                     <div style={{ display: 'flex', flexDirection: 'column', padding: '5%' }} >
+                        <div style={{ display: 'flex', flexDirection: 'row' }} >
+                            <TextField
+                                style={{ width: '100%' }}
+                                value={ this.state.newUser.firstName }
+                                onChange={ (e, value) => this.setState({ newUser : { ...this.state.newUser , ...{ firstName: value } } }) }
+                                floatingLabelText="Nombre"/>
+                                <br/>
+                            <TextField
+                                style={{ width: '100%' }}
+                                value={ this.state.newUser.lastName }
+                                onChange={ (e, value) => this.setState({ newUser : { ...this.state.newUser , ...{ lastName: value } } }) }
+                                floatingLabelText="Apellido"/><br/>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'row' }} >
                         <TextField
                             style={{ width: '100%' }}
-                            value={ this.state.newUser.firstName }
-                            onChange={ (e, value) => this.setState({ newUser : { ...this.state.newUser , ...{ firstName: value } } }) }
-                            floatingLabelText="Nombre"/>
+                            value={ this.state.newUser.username }
+                            onChange={ (e, value) => this.setState({ newUser : { ...this.state.newUser , ...{ username: value } } }) }
+                            floatingLabelText="Escuela"/>
                             <br/>
-                        <TextField
-                            style={{ width: '100%' }}
-                            value={ this.state.newUser.lastName }
-                            onChange={ (e, value) => this.setState({ newUser : { ...this.state.newUser , ...{ lastName: value } } }) }
-                            floatingLabelText="Apellido"/><br/>
-                        <TextField
-                            style={{ width: '100%' }}
-                            value={ this.state.newUser.email }
-                            onChange={ (e, value) => this.setState({ newUser : { ...this.state.newUser , ...{ email: value } } }) }
-                            floatingLabelText="Email"/>
-                            <br/>
-                        <TextField
-                            style={{ width: '100%' }}
-                            value={ this.state.newUser.password }
-                            onChange={ (e, value) => this.setState({ newUser : { ...this.state.newUser , ...{ password: value } } }) }
-                            floatingLabelText="Password"
-                            type={ 'password' }/>
-                            <br/>
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'row' }} >
+                            <TextField
+                                style={{ width: '100%' }}
+                                value={ this.state.newUser.email }
+                                onChange={ (e, value) => this.setState({ newUser : { ...this.state.newUser , ...{ email: value } } }) }
+                                floatingLabelText="Email"/>
+                                <br/>
+                            <TextField
+                                style={{ width: '100%' }}
+                                value={ this.state.newUser.password }
+                                onChange={ (e, value) => this.setState({ newUser : { ...this.state.newUser , ...{ password: value } } }) }
+                                floatingLabelText="Password"
+                                type={ 'password' }/>
+                                <br/>
+                            </div>
 
 
                             {
@@ -281,6 +291,9 @@ class Users extends Component {
                                         <MenuItem value={ 'admin' } primaryText={ 'Admin' } />
                                         <MenuItem value={ 'teacher' } primaryText={ 'Profesor' } />
                                 </SelectField>
+                
+                    
+                    
                     </div>
 
                     <div style={{ flexDirection: 'row',padding: '0 20px', margin: '10px 0' }}>
@@ -306,9 +319,11 @@ class Users extends Component {
                     <ContentAdd />
                 </FloatingActionButton>
                 
-                <FloatingActionButton onTouchTap={()=> this.setState({ modal: true }) } style={{ position: 'fixed', bottom: 100, right: 25 }}>
-                    <ActionHome />
-                </FloatingActionButton>
+                {
+                    // <FloatingActionButton onTouchTap={()=> this.setState({ modal: true }) } style={{ position: 'fixed', bottom: 100, right: 25 }}>
+                    //     <ActionHome />
+                    // </FloatingActionButton>
+                }
                     
 
             </div>
