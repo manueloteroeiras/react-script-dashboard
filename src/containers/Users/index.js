@@ -229,7 +229,7 @@ class Users extends Component {
                 </Table>
 
 
-                <Drawer style={{ flexDirection : 'column', overflowY: 'auto' }} docked={false} width={(window.innerWidth > 700)? window.innerWidth / 2.8 : window.innerWidth } openSecondary={true} open={this.state.open} >
+                <Drawer style={{ flexDirection : 'column', overflowY: 'auto' }} docked={true} width={(window.innerWidth > 700)? window.innerWidth / 2 : window.innerWidth } openSecondary={true} open={this.state.open} >
 
                     <AppBar showMenuIconButton={ false } style={{ backgroundColor: '#00a992' }} title={ ( this.state.actionButton == "CREAR")? 'Nuevo Usuario' : this.state.newUser.firstName } />
 

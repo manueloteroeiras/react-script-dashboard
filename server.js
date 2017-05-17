@@ -26,7 +26,6 @@ var getFile = function(communityID){
 var insertDocuments = function(data, communityID) {
   let itemsLength = data.length;
   var count = 0
-  console.log("Items to upload:", itemsLength)
   data.map((item, key) =>{
       let user = Object.assign({}, item, { password: 'scholas', role: 'user', profilePicture: '', community: communityID });
 
