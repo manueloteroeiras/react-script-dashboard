@@ -10,6 +10,7 @@ export function get_users(email, password) {
     try { 
 
         await getUsers().then((resp) =>{
+            console.log(resp)
             dispatch({ type: 'FETCHED_USERS', payload: resp });
         }).catch((err)=>{
             dispatch({ type: 'USERS_ERROR', payload: err });    

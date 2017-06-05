@@ -24,7 +24,15 @@ export default function user(state = initialState, action = {}) {
       return { ...state, me : action.payload, loginStatus : 'LOGIN_OK' }
 
     case "FETCHED_USERS":
-      return { ...state, users : action.payload, usersStatus : 'FETCHED_USERS' }
+      return { 
+        ...state, 
+        users : action.payload.results, 
+        usersStatus : 'FETCHED_USERS',
+        userPagintor : {
+          totalItems : action.payload.totalItems,
+          totalPages : action.payload.totalPages,
+        }
+      }
 
     case "USER_CREATED":
       return { ...state, users : state.users.concat(action.payload)  }

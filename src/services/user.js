@@ -43,7 +43,7 @@ const getUsers = async () => {
 
     if (!data) throw 'login failed';
 
-    return data.results;
+    return data;
 
   } catch(e) {
     throw e;
@@ -53,7 +53,6 @@ const getUsers = async () => {
 }
 
 const addUser = async (user) => {
-  console.log(user)
   try {
     let data = {};
     await axios(`${ API_URL }/api/users`, {

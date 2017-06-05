@@ -38,6 +38,7 @@ import Toggle from 'material-ui/Toggle';
 
 import ActionHome from 'material-ui/svg-icons/action/description';
 
+
 import {
   blue300,
   indigo900,
@@ -107,6 +108,7 @@ class Users extends Component {
     }
 
     creacteUser(){
+        console.log(this.state.newUser)
         this.props.dispatch(add_user(this.state.newUser))
         this.setState({ open: false })
     }
@@ -189,6 +191,31 @@ class Users extends Component {
         )
     }
 
+    renderPages(){
+        let pages = []
+        for (var i=1 ; i <=  this.props.userPagintor + 20 ; i++ ){
+            pages.push(i)
+        }
+
+        console.log(pages)
+    }
+
+    
+
+    renderPaginator(){
+        return(
+            <div style={{ marginTop: 20 }} >
+                <RaisedButton label="<"  primary={true}  />
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    {
+                        this.renderPages()
+                    }
+                </div>
+                <RaisedButton label=">"  primary={true} />
+            </div>
+        )
+    }
+
 
     render(){
         return(
@@ -225,6 +252,8 @@ class Users extends Component {
 
 
                 </Table>
+
+                { this.renderPaginator() }
 
 
                 <Drawer style={{ flexDirection : 'column', overflowY: 'auto' }} docked={true} width={(window.innerWidth > 700)? window.innerWidth / 2 : window.innerWidth } openSecondary={true} open={this.state.open} >
@@ -337,6 +366,7 @@ class Users extends Component {
 function mapStateToProps(state) {
   return {
     users : state.users,
+    userPagintor : state.userPagintor,
     communities : state.communities,
   };
 }
